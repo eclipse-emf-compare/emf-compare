@@ -52,17 +52,29 @@ import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.conflict.data.ConflictInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ConflictDetectionTest {
+public class ConflictDetectionTest extends AbstractMatcherTest {
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ConflictDetectionTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	/**
 	 * This predicate can be used to check whether a given Diff represents the setting of a value in a
@@ -101,7 +113,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getA1AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -139,7 +151,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getA1ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -187,7 +199,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getA2AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
 
@@ -224,7 +236,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getA2ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -262,7 +274,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getA3AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -295,7 +307,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getA3ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -344,7 +356,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB1AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -383,7 +395,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB1ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -422,7 +434,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB2AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -461,7 +473,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB2ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -500,7 +512,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB3AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -539,7 +551,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB3ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -578,7 +590,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB3ContainmentReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -617,7 +629,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB4AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -656,7 +668,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB4ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -695,7 +707,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB5AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -734,7 +746,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB5ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -773,7 +785,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB6AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -812,7 +824,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getB6ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -851,7 +863,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC1AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -889,7 +901,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC1ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -947,7 +959,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC2AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -976,7 +988,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC2ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1037,7 +1049,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC3AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1075,7 +1087,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC3ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1113,7 +1125,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC4AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1156,7 +1168,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC4ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1237,7 +1249,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC5AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1275,7 +1287,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getC5ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1333,7 +1345,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD1AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1372,7 +1384,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD1ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1411,7 +1423,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD2AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1450,7 +1462,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD2ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1489,7 +1501,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD3AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1528,7 +1540,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD3ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1567,7 +1579,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD4AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1640,7 +1652,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD4ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1713,7 +1725,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD5AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1750,7 +1762,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD5ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1787,7 +1799,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD6AttributeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1824,7 +1836,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getD6ReferenceRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1861,7 +1873,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getE1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1899,7 +1911,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getE2Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1937,7 +1949,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getE3Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1953,7 +1965,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getFRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -1992,7 +2004,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getGRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2031,7 +2043,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getH1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2069,7 +2081,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getH2Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2107,7 +2119,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getIRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2126,7 +2138,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getJRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2147,7 +2159,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getK1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2169,7 +2181,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getK2Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2191,7 +2203,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getK3Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2213,7 +2225,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getK4Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2233,7 +2245,7 @@ public class ConflictDetectionTest {
 		final Resource right = input.getComplexRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -2357,7 +2369,7 @@ public class ConflictDetectionTest {
 		ResourceSet rsRight = input.getRACDanglingConflictRightModel();
 
 		IComparisonScope scope = new DefaultComparisonScope(rsLeft, rsRight, rsAncestor);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		List<Conflict> conflicts = comparison.getConflicts();

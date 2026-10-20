@@ -27,16 +27,29 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.internal.utils.ComparisonUtil;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings("all")
-public class ComparisonUtilTest {
+public class ComparisonUtilTest extends AbstractMatcherTest {
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ComparisonUtilTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
+
 	@Test
 	public void testSubDiffs() throws IOException {
 		IdentifierMatchInputData inputData = new IdentifierMatchInputData();
@@ -47,7 +60,7 @@ public class ComparisonUtilTest {
 
 		// 2-way
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		List<Diff> differences = comparison.getDifferences();
 
 		// Right to left on a deleted element
@@ -83,7 +96,7 @@ public class ComparisonUtilTest {
 
 		// 3-way
 		scope = new DefaultComparisonScope(left, right, origin);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		differences = comparison.getDifferences();
 
 		// Right to left on a deleted element

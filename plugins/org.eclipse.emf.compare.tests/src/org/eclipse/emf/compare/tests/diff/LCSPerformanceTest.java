@@ -22,14 +22,16 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.compare.tests.nodes.NodesFactory;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.junit.Before;
@@ -47,10 +49,21 @@ import org.junit.Test;
  * @author <a href="mailto:laurent.goubet@obeo.fr">Laurent Goubet</a>
  */
 @SuppressWarnings("nls")
-public class LCSPerformanceTest {
+public class LCSPerformanceTest extends AbstractMatcherTest {
+
 	private XMIResource left;
 
 	private XMIResource right;
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public LCSPerformanceTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Before
 	public void setup() {
@@ -72,7 +85,7 @@ public class LCSPerformanceTest {
 		assertTrue(rightRoot.eContents().size() == 200);
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final List<Diff> additions = Lists.newArrayList();
 		final List<Diff> deletions = Lists.newArrayList();
@@ -108,13 +121,13 @@ public class LCSPerformanceTest {
 	@Test(timeout = 40000)
 	public void copyLeftToRight() {
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IBatchMerger merger = new BatchMerger(registry);
 		merger.copyAllLeftToRight(comparison.getDifferences(), new BasicMonitor());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertTrue(comparison.getDifferences().isEmpty());
 	}
 
@@ -132,13 +145,13 @@ public class LCSPerformanceTest {
 	@Test(timeout = 3000)
 	public void copyRightToLeft() {
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		final IMerger.Registry registry = IMerger.RegistryImpl.createStandaloneInstance();
 		final IBatchMerger merger = new BatchMerger(registry);
 		merger.copyAllRightToLeft(comparison.getDifferences(), new BasicMonitor());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		assertTrue(comparison.getDifferences().isEmpty());
 	}
 

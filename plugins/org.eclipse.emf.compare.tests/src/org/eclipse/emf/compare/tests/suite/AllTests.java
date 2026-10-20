@@ -36,10 +36,20 @@ import org.eclipse.emf.compare.tests.edit.AllEditTests;
 import org.eclipse.emf.compare.tests.equi.EquiComputingTest;
 import org.eclipse.emf.compare.tests.fragmentation.FragmentationTest;
 import org.eclipse.emf.compare.tests.fragmentation.ResourceAttachmentChangeBug492261;
+import org.eclipse.emf.compare.tests.framework.ComparisonSignaturesTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithmTest;
 import org.eclipse.emf.compare.tests.fullcomparison.DynamicInstanceComparisonTest;
 import org.eclipse.emf.compare.tests.fullcomparison.ExtLibraryTest;
+import org.eclipse.emf.compare.tests.fullcomparison.GenericsTest;
 import org.eclipse.emf.compare.tests.fullcomparison.IdentifierComparisonTest;
+import org.eclipse.emf.compare.tests.fullcomparison.MatcherComparisonDiagnostic;
 import org.eclipse.emf.compare.tests.fullcomparison.ProximityComparisonTest;
+import org.eclipse.emf.compare.tests.match.ContentHashEObjectMatcherTest;
+import org.eclipse.emf.compare.tests.match.ContentHasherTest;
+import org.eclipse.emf.compare.tests.match.ContentMatchingScenariosTest;
+import org.eclipse.emf.compare.tests.match.ContentOnlyXMIMatchingTest;
+import org.eclipse.emf.compare.tests.match.FeatureValueTest;
+import org.eclipse.emf.compare.tests.match.FingerprintTest;
 import org.eclipse.emf.compare.tests.match.IdentifierEObjectMatcherTest;
 import org.eclipse.emf.compare.tests.match.MatchEngineFactoryRegistryTest;
 import org.eclipse.emf.compare.tests.match.ProximityIndexTest;
@@ -50,6 +60,7 @@ import org.eclipse.emf.compare.tests.merge.Bug485266_MoveDeleteConflict_Test;
 import org.eclipse.emf.compare.tests.merge.ComplexMergeTest;
 import org.eclipse.emf.compare.tests.merge.ConflictImplicationsTest_Bug484579;
 import org.eclipse.emf.compare.tests.merge.ConflictMergeTest;
+import org.eclipse.emf.compare.tests.merge.DanglingReferenceAfterMergeTest;
 import org.eclipse.emf.compare.tests.merge.ExtensionMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMaps2wayMergeTest;
 import org.eclipse.emf.compare.tests.merge.FeatureMaps3wayMergeTest;
@@ -90,8 +101,9 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({CompareTestSuite.class, DefaultComparisonScopeTest.class, IdentifierComparisonTest.class,
-		ExtLibraryTest.class, ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class,
-		DiffUtilTest.class, FeatureMapMoveDiffTest.class, ComparisonUtilTest.class, LCSPerformanceTest.class,
+		ExtLibraryTest.class, GenericsTest.class, DanglingReferenceAfterMergeTest.class,
+		ConflictDetectionTest.class, ReqComputingTest.class, EquiComputingTest.class, DiffUtilTest.class,
+		FeatureMapMoveDiffTest.class, ComparisonUtilTest.class, LCSPerformanceTest.class,
 		MultipleMergeTest.class, PostProcessorTest.class, IndividualMergeTest.class, ExtensionMergeTest.class,
 		IndividualMergeOutOfScopeValuesTest.class, ProximityComparisonTest.class,
 		DynamicInstanceComparisonTest.class, URIDistanceTest.class, FragmentationTest.class,
@@ -108,7 +120,10 @@ import org.junit.runners.Suite.SuiteClasses;
 		RankedAdapterFactoryRegistryTest.class, ComparisonScopeAdapterTest.class,
 		EMFComparePredicatesTest.class, ImplicationsMergeTest.class, GraphTest.class,
 		ConflictImplicationsTest_Bug484579.class, PseudoConflictDetectionTest.class, ComplexMergeTest.class,
-		ConflictSearchTest.class, DiffRelationshipComputerTest.class,
+		ConflictSearchTest.class, DiffRelationshipComputerTest.class, MatchingAlgorithmTest.class,
+		ContentHasherTest.class, ContentHashEObjectMatcherTest.class, FeatureValueTest.class,
+		FingerprintTest.class, ContentOnlyXMIMatchingTest.class, ContentMatchingScenariosTest.class,
+		MatcherComparisonDiagnostic.class, ComparisonSignaturesTest.class,
 		SingleValuedAttributePseudoConflictTest.class, NonUniqueMultiValuedAttributeTest.class, })
 public class AllTests {
 

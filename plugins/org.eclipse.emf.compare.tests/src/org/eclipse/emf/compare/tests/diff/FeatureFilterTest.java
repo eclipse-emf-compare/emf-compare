@@ -20,12 +20,14 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.diff.FeatureFilter;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.diff.data.featurefilter.featuremap.FeatureFilterFeatureMapsInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -38,7 +40,18 @@ import org.junit.Test;
  * @author <a href="mailto:axel.richard@obeo.fr">Axel Richard</a>
  */
 @SuppressWarnings("nls")
-public class FeatureFilterTest {
+public class FeatureFilterTest extends AbstractMatcherTest {
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public FeatureFilterTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
+
 	@Test
 	public void testOnFeatureMaps() throws IOException {
 		// Test with models containing NodeFeatureMapContainment2 elements. A NodeFeatureMapContainment2 is an
@@ -51,7 +64,7 @@ public class FeatureFilterTest {
 		final Resource right = inputData.getNodesRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		FeatureFilter filter = new FeatureFilter();
 
 		Collection<Match> allMatches = getAllMatches(comparison);

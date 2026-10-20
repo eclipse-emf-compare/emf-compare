@@ -25,11 +25,13 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.diff.data.nonuniquemultivaluedattribute.NonUniqueMultiValuedAttributeInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -44,8 +46,19 @@ import org.junit.Test;
  * both situations are tested.
  */
 @SuppressWarnings("nls")
-public class NonUniqueMultiValuedAttributeTest {
+public class NonUniqueMultiValuedAttributeTest extends AbstractMatcherTest {
+
 	private NonUniqueMultiValuedAttributeInputData input = new NonUniqueMultiValuedAttributeInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public NonUniqueMultiValuedAttributeTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testNonUniqueMultiValuedAttributeCaseA3WayDiff() throws IOException {
@@ -54,7 +67,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseAOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences
 		List<Diff> differences = comparison.getDifferences();
@@ -91,7 +104,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseARight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences
 		List<Diff> differences = comparison.getDifferences();
@@ -129,7 +142,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseAOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseA3WayDiff if this fails
@@ -143,7 +156,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have 8 differences, paired in 4 pseudo-conflicts
 		assertEquals(8, comparison.getDifferences().size());
 		assertEquals(4, comparison.getConflicts().size());
@@ -160,7 +173,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseARight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseA2WayDiff if this fails
@@ -174,7 +187,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have no differences left
 		assertEquals(0, comparison.getDifferences().size());
 		assertEquals(0, comparison.getConflicts().size());
@@ -187,7 +200,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseAOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseA3WayDiff if this fails
@@ -201,7 +214,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have 0 differences
 		// (all diffs were on the right side so we cancelled them by merging)
 		assertTrue(comparison.getDifferences().isEmpty());
@@ -214,7 +227,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseARight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseA2WayDiff if this fails
@@ -228,7 +241,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have no differences left
 		assertEquals(0, comparison.getDifferences().size());
 		assertEquals(0, comparison.getConflicts().size());
@@ -241,7 +254,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseBOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 3 differences
 		List<Diff> differences = comparison.getDifferences();
@@ -273,7 +286,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseBRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 3 differences
 		List<Diff> differences = comparison.getDifferences();
@@ -306,7 +319,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseBOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 3 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseB3WayDiff if this fails
@@ -320,7 +333,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have 6 differences, paired in 3 pseudo-conflicts
 		assertEquals(6, comparison.getDifferences().size());
 		assertEquals(3, comparison.getConflicts().size());
@@ -337,7 +350,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseBRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 3 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseB2WayDiff if this fails
@@ -351,7 +364,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have no differences left
 		assertEquals(0, comparison.getDifferences().size());
 		assertEquals(0, comparison.getConflicts().size());
@@ -364,7 +377,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseBOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 3 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseB3WayDiff if this fails
@@ -378,7 +391,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have 0 differences
 		// (all diffs were on the right side so we cancelled them by merging)
 		assertTrue(comparison.getDifferences().isEmpty());
@@ -391,7 +404,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseBRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 3 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseB2WayDiff if this fails
@@ -405,7 +418,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have no differences left
 		assertEquals(0, comparison.getDifferences().size());
 		assertEquals(0, comparison.getConflicts().size());
@@ -418,7 +431,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseCOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences
 		List<Diff> differences = comparison.getDifferences();
@@ -455,7 +468,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseCRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences
 		List<Diff> differences = comparison.getDifferences();
@@ -493,7 +506,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseCOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseC3WayDiff if this fails
@@ -507,7 +520,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have 0 differences
 		// (all diffs were on the left side so we cancelled them by merging)
 		assertTrue(comparison.getDifferences().isEmpty());
@@ -520,7 +533,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseCRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseC2WayDiff if this fails
@@ -534,7 +547,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have no differences left
 		assertEquals(0, comparison.getDifferences().size());
 		assertEquals(0, comparison.getConflicts().size());
@@ -547,7 +560,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource origin = input.getNonUniqueMultiValuedAttributeCaseCOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseC3WayDiff if this fails
@@ -561,7 +574,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have 8 differences, paired in 4 pseudo-conflicts
 		assertEquals(8, comparison.getDifferences().size());
 		assertEquals(4, comparison.getConflicts().size());
@@ -578,7 +591,7 @@ public class NonUniqueMultiValuedAttributeTest {
 		Resource right = input.getNonUniqueMultiValuedAttributeCaseCRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		// We expect 4 differences and no conflict.
 		// see testNonUniqueMultiValuedAttributeCaseC2WayDiff if this fails
@@ -592,7 +605,7 @@ public class NonUniqueMultiValuedAttributeTest {
 					BasicMonitor.toMonitor(new NullProgressMonitor()));
 		}
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		// we should now have no differences left
 		assertEquals(0, comparison.getDifferences().size());
 		assertEquals(0, comparison.getConflicts().size());

@@ -16,14 +16,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.provider.MatchItemProvider;
 import org.eclipse.emf.compare.provider.spec.MatchItemProviderSpec;
-import org.eclipse.emf.compare.tests.edit.data.ecore.a1.EcoreA1InputData;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,8 +29,17 @@ import org.junit.Test;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAdapter {
-
 	private MatchItemProvider itemProvider;
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 */
+	public TestMatchItemProviderSpec(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Override
 	@Before
@@ -43,7 +50,7 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 
 	@Test
 	public void testGetChildren_EcoreA1() throws IOException {
-		Match ePackageMatch = getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackageMatchChildren = itemProvider.getChildren(ePackageMatch);
 		assertEquals(22, ePackageMatchChildren.size());
@@ -51,17 +58,9 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 		assertEquals(18, size(filter(ePackageMatchChildren, Match.class)));
 	}
 
-	static Match getEcoreA1_EPackageMatch() throws IOException {
-		Comparison comparison = getComparison(new EcoreA1InputData());
-
-		List<Match> matches = comparison.getMatches();
-		Match ePackageMatch = matches.get(0);
-		return ePackageMatch;
-	}
-
 	@Test
 	public void testGetChildren_AudioVisualItem() throws IOException {
-		Match ePackageMatch = getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
 		Match audioVisualItem_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", //$NON-NLS-1$
@@ -75,7 +74,7 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 
 	@Test
 	public void testGetChildren_AudioVisualItem_lenght() throws IOException {
-		Match ePackageMatch = getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
 		Match audioVisualItem_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", //$NON-NLS-1$
@@ -93,7 +92,7 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 
 	@Test
 	public void testGetChildren_Book() throws IOException {
-		Match ePackageMatch = getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
 		Match book_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Book"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -106,7 +105,7 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 
 	@Test
 	public void testGetChildren_BookCategory() throws IOException {
-		Match ePackageMatch = getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
 		Match bookCategory_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "BookCategory"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -119,7 +118,7 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 
 	@Test
 	public void testGetChildren_Borrowable() throws IOException {
-		Match ePackageMatch = getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
 		Match borrowable_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Borrowable"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -132,7 +131,7 @@ public class TestMatchItemProviderSpec extends AbstractTestCompareItemProviderAd
 
 	@Test
 	public void testGetChildren_Person() throws IOException {
-		Match ePackageMatch = getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = itemProvider.getChildren(ePackageMatch);
 		Match person_Match = getMatchWithFeatureValue(ePackage_MatchChildren, "name", "Person"); //$NON-NLS-1$ //$NON-NLS-2$

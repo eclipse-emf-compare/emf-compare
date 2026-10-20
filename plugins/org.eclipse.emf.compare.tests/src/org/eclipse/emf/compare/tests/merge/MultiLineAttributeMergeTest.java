@@ -20,12 +20,14 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -35,11 +37,21 @@ import org.junit.Test;
  * @author Philip Langer <planger@eclipsesource.com>
  */
 @SuppressWarnings("nls")
-public class MultiLineAttributeMergeTest {
+public class MultiLineAttributeMergeTest extends AbstractMatcherTest {
 
 	private static final String NL = "\n";
 
 	private IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public MultiLineAttributeMergeTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void changeSingleLineTextOnOneSide() throws IOException {
@@ -514,7 +526,7 @@ public class MultiLineAttributeMergeTest {
 		final Resource right = scenario.getRightResource();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		return comparison;
 	}
 

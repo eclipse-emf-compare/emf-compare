@@ -17,10 +17,12 @@ import java.io.IOException;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope2;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.fullcomparison.data.identifier.IdentifierMatchInputData;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Test;
@@ -30,11 +32,21 @@ import org.junit.Test;
  * 
  * @author Philip Langer <planger@eclipsesource.com>
  */
-public class ComparisonScopeAdapterTest {
+public class ComparisonScopeAdapterTest extends AbstractMatcherTest {
 
 	private static final URI TEST_URI_1 = URI.createURI("test_uri_1"); //$NON-NLS-1$
 
 	private static final URI TEST_URI_2 = URI.createURI("test_uri_2"); //$NON-NLS-1$
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ComparisonScopeAdapterTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testAccessingScopeFromComparison() throws IOException {
@@ -47,7 +59,7 @@ public class ComparisonScopeAdapterTest {
 		scope.getAllInvolvedResourceURIs().add(TEST_URI_1);
 		scope.getAllInvolvedResourceURIs().add(TEST_URI_2);
 
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		final IComparisonScope2 comparisonScope = adaptToComparisonScope(comparison);
 		assertNotNull(comparisonScope);
 		assertTrue(comparisonScope.getAllInvolvedResourceURIs().contains(TEST_URI_1));

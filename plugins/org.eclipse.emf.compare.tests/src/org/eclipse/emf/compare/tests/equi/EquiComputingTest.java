@@ -26,21 +26,33 @@ import java.util.List;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.equi.data.EquiInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
 @SuppressWarnings({"nls", "boxing" })
-public class EquiComputingTest {
+public class EquiComputingTest extends AbstractMatcherTest {
 
 	enum TestKind {
 		LEFT, RIGHT;
 	}
 
 	private EquiInputData input = new EquiInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public EquiComputingTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testA1UseCase() throws IOException {
@@ -1136,6 +1148,6 @@ public class EquiComputingTest {
 
 	private Comparison compare(Notifier left, Notifier right, Notifier ancestor) {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		return EMFCompare.builder().build().compare(scope);
+		return matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 	}
 }

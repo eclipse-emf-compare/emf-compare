@@ -18,24 +18,36 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.postprocessor.IPostProcessor;
 import org.eclipse.emf.compare.postprocessor.PostProcessorDescriptorRegistryImpl;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.postprocess.data.PostProcessInputData;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor;
 import org.eclipse.emf.compare.tests.postprocess.data.TestPostProcessor.TestPostProcessorDescriptor;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class PostProcessorTest {
+public class PostProcessorTest extends AbstractMatcherTest {
 
 	private PostProcessInputData input = new PostProcessInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public PostProcessorTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -49,7 +61,7 @@ public class PostProcessorTest {
 		final Resource right = input.getRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 
 		assertEquals(1, comparison.getMatches().size());
 	}
@@ -219,7 +231,8 @@ public class PostProcessorTest {
 						new TestPostProcessor4(), 11));
 
 		// Populate nsURIs of the scope.
-		EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
+		matcher.builder(UseIdentifiers.WHEN_AVAILABLE).setPostProcessorRegistry(registry)
+				.build().compare(scope);
 
 		List<IPostProcessor> postProcessors = registry.getPostProcessors(scope);
 
@@ -236,7 +249,8 @@ public class PostProcessorTest {
 				new TestPostProcessorDescriptor(nsURI, resourceURI, new TestPostProcessor(), 10));
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		return EMFCompare.builder().setPostProcessorRegistry(registry).build().compare(scope);
+		return matcher.builder(UseIdentifiers.WHEN_AVAILABLE).setPostProcessorRegistry(registry)
+				.build().compare(scope);
 	}
 
 	/**

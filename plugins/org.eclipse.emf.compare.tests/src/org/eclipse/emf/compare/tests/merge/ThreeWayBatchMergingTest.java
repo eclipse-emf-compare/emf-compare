@@ -26,14 +26,16 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IBatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.merge.data.ThreeWayMergeInputData;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -43,13 +45,23 @@ import org.junit.Test;
  * 
  * @author Philip Langer <planger@eclipsesource.com>
  */
-public class ThreeWayBatchMergingTest {
+public class ThreeWayBatchMergingTest extends AbstractMatcherTest {
 
 	final private ThreeWayMergeInputData input = new ThreeWayMergeInputData();
 
 	final private IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
 
 	final private IBatchMerger merger = new BatchMerger(mergerRegistry);
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ThreeWayBatchMergingTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
 
 	/**
 	 * Tests a scenario in which a model element is moved from one container into another, whereas the
@@ -120,7 +132,7 @@ public class ThreeWayBatchMergingTest {
 	}
 
 	private Comparison compare(IComparisonScope scope) {
-		return EMFCompare.builder().build().compare(scope);
+		return matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 	}
 
 	private List<Diff> filterDiffs(List<Diff> diffs, DifferenceSource source, boolean filterConflicting) {

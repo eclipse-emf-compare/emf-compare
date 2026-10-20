@@ -34,19 +34,21 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatchingAlgorithm;
 import org.eclipse.emf.compare.tests.req.data.ReqInputData;
+import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ReqComputingTest {
+public class ReqComputingTest extends AbstractMatcherTest {
 
 	enum TestKind {
 		ADD, DELETE;
@@ -54,13 +56,23 @@ public class ReqComputingTest {
 
 	private ReqInputData input = new ReqInputData();
 
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ReqComputingTest(MatchingAlgorithm matcher) {
+		super(matcher);
+	}
+
 	@Test
 	public void testA1UseCase() throws IOException {
 		final Resource left = input.getA1Left();
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -70,7 +82,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -80,7 +92,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -90,7 +102,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB4(TestKind.DELETE, comparison);
 	}
 
@@ -100,7 +112,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA5Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB5(TestKind.DELETE, comparison);
 	}
 
@@ -110,7 +122,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA6Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB6(TestKind.DELETE, comparison);
 
 	}
@@ -121,7 +133,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA7Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB7(TestKind.ADD, comparison);
 	}
 
@@ -131,7 +143,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA8Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB8(TestKind.ADD, comparison);
 	}
 
@@ -141,7 +153,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA9Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB9(TestKind.ADD, comparison);
 	}
 
@@ -151,7 +163,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA10Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB10(TestKind.ADD, comparison);
 	}
 
@@ -161,7 +173,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA11Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB11(TestKind.ADD, comparison);
 	}
 
@@ -171,7 +183,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -181,7 +193,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA2Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -191,7 +203,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA3Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -201,7 +213,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA4Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB4(TestKind.ADD, comparison);
 	}
 
@@ -211,7 +223,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA5Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB5(TestKind.ADD, comparison);
 	}
 
@@ -221,7 +233,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA6Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB6(TestKind.ADD, comparison);
 	}
 
@@ -231,7 +243,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA7Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB7(TestKind.DELETE, comparison);
 	}
 
@@ -241,7 +253,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA8Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB8(TestKind.DELETE, comparison);
 	}
 
@@ -251,7 +263,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA9Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB9(TestKind.DELETE, comparison);
 	}
 
@@ -261,7 +273,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA10Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB10(TestKind.DELETE, comparison);
 	}
 
@@ -271,7 +283,7 @@ public class ReqComputingTest {
 		final Resource right = input.getA11Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB11(TestKind.DELETE, comparison);
 	}
 
@@ -281,7 +293,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD1(TestKind.DELETE, comparison);
 	}
 
@@ -291,7 +303,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC2Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD2(TestKind.DELETE, comparison);
 	}
 
@@ -301,7 +313,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC3Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD3(TestKind.DELETE, comparison);
 	}
 
@@ -311,7 +323,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC4Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD4(TestKind.DELETE, comparison);
 	}
 
@@ -321,7 +333,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC5Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD5(TestKind.DELETE, comparison);
 	}
 
@@ -331,7 +343,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD1(TestKind.ADD, comparison);
 	}
 
@@ -341,7 +353,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC2Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD2(TestKind.ADD, comparison);
 	}
 
@@ -351,7 +363,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC3Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD3(TestKind.ADD, comparison);
 	}
 
@@ -361,7 +373,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC4Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD4(TestKind.ADD, comparison);
 	}
 
@@ -371,7 +383,7 @@ public class ReqComputingTest {
 		final Resource right = input.getC5Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD5(TestKind.ADD, comparison);
 	}
 
@@ -382,7 +394,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE1Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB1(TestKind.DELETE, comparison);
 	}
 
@@ -393,7 +405,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE2Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB2(TestKind.DELETE, comparison);
 	}
 
@@ -404,7 +416,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE3Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB3(TestKind.DELETE, comparison);
 	}
 
@@ -415,7 +427,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE4Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB4(TestKind.DELETE, comparison);
 	}
 
@@ -426,7 +438,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE5Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB5(TestKind.DELETE, comparison);
 	}
 
@@ -437,7 +449,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE6Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB6(TestKind.DELETE, comparison);
 	}
 
@@ -448,7 +460,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE7Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD1(TestKind.DELETE, comparison);
 	}
 
@@ -459,7 +471,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE8Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD2(TestKind.DELETE, comparison);
 	}
 
@@ -470,7 +482,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE9Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD3(TestKind.DELETE, comparison);
 	}
 
@@ -481,7 +493,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE10Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD4(TestKind.DELETE, comparison);
 	}
 
@@ -492,7 +504,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getE11Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD5(TestKind.DELETE, comparison);
 	}
 
@@ -503,7 +515,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF1Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB1(TestKind.ADD, comparison);
 	}
 
@@ -514,7 +526,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF2Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB2(TestKind.ADD, comparison);
 	}
 
@@ -525,7 +537,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF3Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB3(TestKind.ADD, comparison);
 	}
 
@@ -536,7 +548,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF4Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB4(TestKind.ADD, comparison);
 	}
 
@@ -547,7 +559,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF5Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB5(TestKind.ADD, comparison);
 	}
 
@@ -558,7 +570,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF6Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testAB6(TestKind.ADD, comparison);
 	}
 
@@ -569,7 +581,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF7Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD1(TestKind.ADD, comparison);
 	}
 
@@ -580,7 +592,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF8Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD2(TestKind.ADD, comparison);
 	}
 
@@ -591,7 +603,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF9Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD3(TestKind.ADD, comparison);
 	}
 
@@ -602,7 +614,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF10Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD4(TestKind.ADD, comparison);
 	}
 
@@ -613,7 +625,7 @@ public class ReqComputingTest {
 		final Resource ancestor = input.getF11Ancestor();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testCD5(TestKind.ADD, comparison);
 	}
 
@@ -623,7 +635,7 @@ public class ReqComputingTest {
 		final Resource right = input.getG1Right();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		String root = "root";
 		String node1 = root + ".node1";
 		String node2 = node1 + ".node2";
@@ -677,11 +689,11 @@ public class ReqComputingTest {
 		assertEquals(2, rightSet.getResources().size());
 
 		IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testH(TestKind.DELETE, comparison);
 
 		scope = new DefaultComparisonScope(rightSet, leftSet, originSet);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testH(TestKind.DELETE, comparison);
 	}
 
@@ -708,11 +720,11 @@ public class ReqComputingTest {
 		assertEquals(1, rightSet.getResources().size());
 
 		IComparisonScope scope = new DefaultComparisonScope(leftSet, rightSet, originSet);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testH(TestKind.ADD, comparison);
 
 		scope = new DefaultComparisonScope(rightSet, leftSet, originSet);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder(UseIdentifiers.WHEN_AVAILABLE).build().compare(scope);
 		testH(TestKind.ADD, comparison);
 	}
 
