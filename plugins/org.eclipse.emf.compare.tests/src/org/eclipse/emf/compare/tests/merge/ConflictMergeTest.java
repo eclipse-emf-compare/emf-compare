@@ -43,11 +43,12 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.compare.tests.nodes.Node;
 import org.eclipse.emf.compare.tests.nodes.NodeEnum;
@@ -62,11 +63,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ConflictMergeTest {
+public class ConflictMergeTest extends AbstractMatcherTest {
 
 	private IndividualDiffInputData input = new IndividualDiffInputData();
 
 	private final BatchMerger batchMerger = new BatchMerger(IMerger.RegistryImpl.createStandaloneInstance());
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ConflictMergeTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -78,7 +89,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -141,7 +152,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -204,7 +215,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -266,7 +277,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -327,7 +338,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -360,7 +371,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -396,7 +407,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightDeleteOriginEEnumConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -433,7 +444,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightDeleteOriginEEnumConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -457,7 +468,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -495,7 +506,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftAddRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -528,7 +539,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -561,7 +572,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -599,7 +610,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -637,7 +648,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightAddOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -671,7 +682,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -698,7 +709,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -742,7 +753,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -777,7 +788,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -815,7 +826,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -853,7 +864,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -888,7 +899,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -932,7 +943,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -959,7 +970,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightUnsetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -992,7 +1003,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightUnsetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1031,7 +1042,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightUnsetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1070,7 +1081,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightUnsetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1102,7 +1113,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftUnsetRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1134,7 +1145,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftUnsetRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1173,7 +1184,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftUnsetRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1212,7 +1223,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftUnsetRightSetOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1245,7 +1256,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightMoveOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1272,7 +1283,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightMoveOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1319,7 +1330,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightMoveOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1366,7 +1377,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftDeleteRightMoveOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1406,7 +1417,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftMoveRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1452,7 +1463,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftMoveRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1504,7 +1515,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftMoveRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1556,7 +1567,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftMoveRightDeleteOriginConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1595,7 +1606,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightSetOriginEEnumConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());
@@ -1629,7 +1640,7 @@ public class ConflictMergeTest {
 		final Resource origin = input.getLeftSetRightSetOriginEEnumConflictScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(2, differences.size());

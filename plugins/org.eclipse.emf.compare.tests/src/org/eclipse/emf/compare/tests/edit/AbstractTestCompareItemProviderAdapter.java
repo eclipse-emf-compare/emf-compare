@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
@@ -31,6 +30,9 @@ import org.eclipse.emf.compare.provider.spec.CompareItemProviderAdapterFactorySp
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.edit.data.ResourceScopeProvider;
+import org.eclipse.emf.compare.tests.edit.data.ecore.a1.EcoreA1InputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -39,9 +41,18 @@ import org.junit.Before;
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
-public class AbstractTestCompareItemProviderAdapter {
-
+public abstract class AbstractTestCompareItemProviderAdapter extends AbstractMatcherTest {
 	protected CompareItemProviderAdapterFactory compareItemProviderAdapterFactory;
+
+	/**
+	 * Selects the content matcher behind identifier-defined presentation fixtures.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 */
+	protected AbstractTestCompareItemProviderAdapter(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Before
 	public void before() throws IOException {
@@ -49,13 +60,28 @@ public class AbstractTestCompareItemProviderAdapter {
 	}
 
 	/**
+	 * @param scopeProvider
+	 *            the fixture loader
 	 * @return the comparison
 	 * @throws IOException
+	 *             if a fixture cannot be loaded
 	 */
-	protected static Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
+	protected Comparison getComparison(ResourceScopeProvider scopeProvider) throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(scopeProvider.getLeft(),
 				scopeProvider.getRight(), scopeProvider.getOrigin());
-		return EMFCompare.builder().build().compare(scope);
+		// These presentation assertions use the identifier-defined change tree.
+		return matcher.builderWithIdentifiers().build().compare(scope);
+	}
+
+	/**
+	 * Returns the package match used in the item-provider assertions.
+	 *
+	 * @return the matched EPackage
+	 * @throws IOException
+	 *             if a fixture cannot be loaded
+	 */
+	protected Match getEcoreA1PackageMatch() throws IOException {
+		return getComparison(new EcoreA1InputData()).getMatches().get(0);
 	}
 
 	protected Match getMatchWithFeatureValue(Collection<?> c, final String featureName, final Object value) {

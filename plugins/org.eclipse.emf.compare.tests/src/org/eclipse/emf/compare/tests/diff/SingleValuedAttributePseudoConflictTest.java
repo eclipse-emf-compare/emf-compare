@@ -25,16 +25,33 @@ import org.eclipse.emf.compare.ConflictKind;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.diff.data.pseudoconflict.SingleValuedAttributePseudoConflictInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
-public class SingleValuedAttributePseudoConflictTest {
+/**
+ * Tests pseudo conflicts on single-valued attributes with both matchers.
+ *
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ */
+public class SingleValuedAttributePseudoConflictTest extends AbstractMatcherTest {
+
 	private SingleValuedAttributePseudoConflictInputData input = new SingleValuedAttributePseudoConflictInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public SingleValuedAttributePseudoConflictTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testSingleValuedAttributePseudoConflict() throws IOException {
@@ -43,7 +60,7 @@ public class SingleValuedAttributePseudoConflictTest {
 		Resource origin = input.getSingleValueAttributePseudoConflictOrigin();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// There are only two differences
 		List<Diff> differences = comparison.getDifferences();

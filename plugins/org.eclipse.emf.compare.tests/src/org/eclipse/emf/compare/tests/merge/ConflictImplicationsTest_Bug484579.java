@@ -28,11 +28,12 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.checkers.MergeDependenciesChecker;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -45,11 +46,21 @@ import org.junit.Test;
  * @see bug <a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=484579">484579</a> for more details.
  */
 @SuppressWarnings("nls")
-public class ConflictImplicationsTest_Bug484579 {
+public class ConflictImplicationsTest_Bug484579 extends AbstractMatcherTest {
 
 	private IndividualDiffInputData input = new IndividualDiffInputData();
 
 	private final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ConflictImplicationsTest_Bug484579(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	/**
 	 * Assert that the rejection of the deletion of PackageY (right to left) will not lead to unwanted
@@ -144,7 +155,7 @@ public class ConflictImplicationsTest_Bug484579 {
 		MergeDependenciesChecker checker = null;
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		EList<Conflict> conflicts = comparison.getConflicts();
 		EList<Diff> differences = comparison.getDifferences();
@@ -273,7 +284,7 @@ public class ConflictImplicationsTest_Bug484579 {
 		final Resource right = input.getMoveConflictAndPseudoConflictImplicationsRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		EList<Conflict> conflicts = comparison.getConflicts();
 

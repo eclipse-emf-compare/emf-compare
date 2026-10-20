@@ -22,12 +22,22 @@ import java.util.List;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.tests.edit.data.ecore.a1.EcoreA1InputData;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.junit.Test;
 
 /**
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class TestAttributeChangeItemProviderSpec extends AbstractTestCompareItemProviderAdapter {
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 */
+	public TestAttributeChangeItemProviderSpec(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testGetChildren_EcoreA1() throws IOException {

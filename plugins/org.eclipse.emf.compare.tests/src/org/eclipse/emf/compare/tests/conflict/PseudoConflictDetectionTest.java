@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.emf.compare.tests.conflict;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notifier;
@@ -22,10 +21,11 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.ConflictKind;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.conflict.data.ConflictInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -37,7 +37,7 @@ import org.junit.runners.Parameterized.Parameters;
  * @author <a href="mailto:mathieu.cartaud@obeo.fr">Mathieu Cartaud</a>
  */
 @RunWith(Parameterized.class)
-public class PseudoConflictDetectionTest {
+public class PseudoConflictDetectionTest extends AbstractMatcherTest {
 
 	private final Notifier origin;
 
@@ -47,49 +47,70 @@ public class PseudoConflictDetectionTest {
 
 	private final int numberOfConflicts;
 
-	@Parameters
-	public static Collection<Object[]> params() throws IOException {
-		ConflictInputData inputData = new ConflictInputData();
-		/**
-		 * Ancestor model is fragmented into 2 files, and the controlled file is deleted on both sides.
-		 */
-		Object[] test1 = new Object[] {inputData.getPseudoConflictCase1Ancestor(),
-				inputData.getPseudoConflictCase1RightAndLeftModel(),
-				inputData.getPseudoConflictCase1RightAndLeftModel(), new Integer(5) };
-		/**
-		 * Right and left models add the same univaluated containment EReference.
-		 */
-		Object[] test2 = new Object[] {inputData.getPseudoConflictCase2Ancestor(),
-				inputData.getPseudoConflictCase2RightAndLeftModel(),
-				inputData.getPseudoConflictCase2RightAndLeftModel(), new Integer(1) };
-		/**
-		 * Right and left models add an element in an univaluated containment EReference and this element
-		 * referenced another element by a non-containment reference.
-		 */
-		Object[] test3 = new Object[] {inputData.getPseudoConflictCase3Ancestor(),
-				inputData.getPseudoConflictCase3RightAndLeftModel(),
-				inputData.getPseudoConflictCase3RightAndLeftModel(), new Integer(2) };
-		/**
-		 * Test the same behavior that test3 but with a more complex model.
-		 */
-		Object[] test4 = new Object[] {inputData.getPseudoConflictCase4Ancestor(),
-				inputData.getPseudoConflictCase4RightAndLeftModel(),
-				inputData.getPseudoConflictCase4RightAndLeftModel(), new Integer(2) };
-		return Arrays.asList(test1, test2, test3, test4);
+	/**
+	 * Loads independent models for one matcher and pseudo-conflict scenario.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 * @param scenario
+	 *            the fixture number
+	 * @param numberOfConflicts
+	 *            the expected pseudo-conflict count
+	 * @throws IOException
+	 *             if a fixture cannot be loaded
+	 */
+	public PseudoConflictDetectionTest(MatcherKind matcher, int scenario, int numberOfConflicts)
+			throws IOException {
+		super(matcher);
+		ConflictInputData data = new ConflictInputData();
+		switch (scenario) {
+			case 1:
+				origin = data.getPseudoConflictCase1Ancestor();
+				left = data.getPseudoConflictCase1RightAndLeftModel();
+				right = data.getPseudoConflictCase1RightAndLeftModel();
+				break;
+			case 2:
+				origin = data.getPseudoConflictCase2Ancestor();
+				left = data.getPseudoConflictCase2RightAndLeftModel();
+				right = data.getPseudoConflictCase2RightAndLeftModel();
+				break;
+			case 3:
+				origin = data.getPseudoConflictCase3Ancestor();
+				left = data.getPseudoConflictCase3RightAndLeftModel();
+				right = data.getPseudoConflictCase3RightAndLeftModel();
+				break;
+			case 4:
+				origin = data.getPseudoConflictCase4Ancestor();
+				left = data.getPseudoConflictCase4RightAndLeftModel();
+				right = data.getPseudoConflictCase4RightAndLeftModel();
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown pseudo-conflict scenario: " + scenario); //$NON-NLS-1$
+		}
+		this.numberOfConflicts = numberOfConflicts;
 	}
 
-	public PseudoConflictDetectionTest(final Notifier origin, final Notifier left, final Notifier right,
-			final Integer numberOfConflicts) {
-		this.origin = checkNotNull(origin);
-		this.left = checkNotNull(left);
-		this.right = checkNotNull(right);
-		this.numberOfConflicts = (checkNotNull(numberOfConflicts)).intValue();
+	/**
+	 * Lists each scenario for both matchers.
+	 *
+	 * @return the matcher, scenario and expected conflict count
+	 */
+	@Parameters(name = "{0}-case{1}")
+	public static Collection<Object[]> params() {
+		Collection<Object[]> result = new ArrayList<>();
+		for (MatcherKind matcher : MatcherKind.values()) {
+			result.add(new Object[] {matcher, 1, 5 });
+			result.add(new Object[] {matcher, 2, 1 });
+			result.add(new Object[] {matcher, 3, 2 });
+			result.add(new Object[] {matcher, 4, 2 });
+		}
+		return result;
 	}
 
 	@Test
 	public void verifyPseudoConflictDetection() throws IOException {
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 
 		EList<Conflict> conflicts = comparison.getConflicts();
 		assertEquals(numberOfConflicts, conflicts.size());

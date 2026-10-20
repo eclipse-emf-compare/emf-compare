@@ -42,6 +42,8 @@ import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.conflict.data.ConflictInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -90,7 +92,7 @@ import org.junit.runners.Parameterized.Parameters;
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
 @RunWith(Parameterized.class)
-public class ComplexMergeTest {
+public class ComplexMergeTest extends AbstractMatcherTest {
 
 	private ConflictInputData conflictInput = new ConflictInputData();
 
@@ -102,9 +104,45 @@ public class ComplexMergeTest {
 
 	private List<Predicate<? super Diff>> otherPermutation;
 
+	/**
+	 * Selects the matcher and the order of merge operations.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 * @param leftConflictpermutation
+	 *            the order of left conflicting differences
+	 * @param rightConflictPermutation
+	 *            the order of right conflicting differences
+	 * @param otherPermutation
+	 *            the order of remaining differences
+	 */
+	public ComplexMergeTest(MatcherKind matcher, List<Predicate<? super Diff>> leftConflictpermutation,
+			List<Predicate<? super Diff>> rightConflictPermutation,
+			List<Predicate<? super Diff>> otherPermutation) {
+		super(matcher);
+		this.rightConflictPermutation = rightConflictPermutation;
+		this.leftConflictPermutation = leftConflictpermutation;
+		this.otherPermutation = otherPermutation;
+	}
+
 	@SuppressWarnings("unchecked")
-	@Parameters
+	@Parameters(name = "{0}-{index}")
 	public static Iterable<Object[]> data() {
+		List<Object[]> result = new ArrayList<>();
+		for (MatcherKind matcher : MatcherKind.values()) {
+			result.addAll(dataFor(matcher));
+		}
+		return result;
+	}
+
+	/**
+	 * Combines merge permutations for one matcher.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 * @return the matcher and merge orders
+	 */
+	private static List<Object[]> dataFor(MatcherKind matcher) {
 		Collection<List<Predicate<? super Diff>>> rightConflictPermutations = permutations(
 				Arrays.<Predicate<? super Diff>> asList(added("Root.Node0"), //$NON-NLS-1$
 						moved("Root.Node1", "containmentRef1"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -124,20 +162,12 @@ public class ComplexMergeTest {
 		for (List<Predicate<? super Diff>> otherPermutation : otherPermutations) {
 			for (List<Predicate<? super Diff>> rightConflictPermutation : rightConflictPermutations) {
 				for (List<Predicate<? super Diff>> leftConflictPermutation : leftConflictPermutations) {
-					data.add(new Object[] {leftConflictPermutation, rightConflictPermutation,
+					data.add(new Object[] {matcher, leftConflictPermutation, rightConflictPermutation,
 							otherPermutation });
 				}
 			}
 		}
 		return data;
-	}
-
-	public ComplexMergeTest(List<Predicate<? super Diff>> leftConflictpermutation,
-			List<Predicate<? super Diff>> rightConflictPermutation,
-			List<Predicate<? super Diff>> otherPermutation) {
-		this.rightConflictPermutation = rightConflictPermutation;
-		this.leftConflictPermutation = leftConflictpermutation;
-		this.otherPermutation = otherPermutation;
 	}
 
 	/**
@@ -154,7 +184,7 @@ public class ComplexMergeTest {
 		final Resource right = conflictInput.getComplexRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		EMFCompare emfc = EMFCompare.builder().build();
+		EMFCompare emfc = matcher.builder().build();
 
 		Comparison comp = emfc.compare(scope);
 		for (Predicate<? super Diff> conflictingNode : rightConflictPermutation) {
@@ -188,7 +218,7 @@ public class ComplexMergeTest {
 		final Resource right = conflictInput.getComplexRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		EMFCompare emfc = EMFCompare.builder().build();
+		EMFCompare emfc = matcher.builder().build();
 
 		Comparison comp = emfc.compare(scope);
 		for (Predicate<? super Diff> conflictingNode : leftConflictPermutation) {

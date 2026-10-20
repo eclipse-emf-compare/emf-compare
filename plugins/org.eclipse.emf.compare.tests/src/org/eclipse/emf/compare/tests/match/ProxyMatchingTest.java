@@ -18,11 +18,12 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.match.data.MatchInputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -34,9 +35,19 @@ import org.junit.Test;
  *
  * @author Stefan Dirix <sdirix@eclipsesource.com>
  */
-public class ProxyMatchingTest {
+public class ProxyMatchingTest extends AbstractMatcherTest {
 
 	private MatchInputData input = new MatchInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ProxyMatchingTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	/**
 	 * Tests a scenario in which the elements are identified via xmi:ids and the left side uses an
@@ -57,7 +68,7 @@ public class ProxyMatchingTest {
 		EcoreUtil.resolveAll(rightResourceSet);
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Match> matches = comparison.getMatches();
 
@@ -93,7 +104,7 @@ public class ProxyMatchingTest {
 		EcoreUtil.resolveAll(rightResourceSet);
 
 		final IComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Match> matches = comparison.getMatches();
 

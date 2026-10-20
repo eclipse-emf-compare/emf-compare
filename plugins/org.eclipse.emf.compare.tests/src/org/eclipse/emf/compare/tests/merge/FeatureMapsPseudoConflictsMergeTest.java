@@ -31,12 +31,13 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -52,11 +53,21 @@ import org.junit.Test;
  * ReferenceChange and vice-versa. Each case will be done on the FeatureMapChange and on the ReferenceChange.
  */
 @SuppressWarnings({"nls", "rawtypes", "unchecked" })
-public class FeatureMapsPseudoConflictsMergeTest {
+public class FeatureMapsPseudoConflictsMergeTest extends AbstractMatcherTest {
 
 	private IndividualDiffInputData input = new IndividualDiffInputData();
 
 	private final IMerger.Registry mergerRegistry = IMerger.RegistryImpl.createStandaloneInstance();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public FeatureMapsPseudoConflictsMergeTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testConflictContainmentPseudoConflictAdd_LtR_1() throws IOException {
@@ -65,7 +76,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -114,7 +125,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -125,7 +136,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -174,7 +185,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -185,7 +196,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -234,7 +245,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -245,7 +256,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't exists in the ancestor, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -294,7 +305,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -305,7 +316,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
@@ -351,7 +362,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -362,7 +373,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
@@ -408,7 +419,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -419,7 +430,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
@@ -465,7 +476,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -476,7 +487,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1, but not in left and right .
 		List<Diff> differences = comparison.getDifferences();
@@ -522,7 +533,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -533,7 +544,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
@@ -583,7 +594,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -594,7 +605,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
@@ -644,7 +655,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -655,7 +666,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
@@ -705,7 +716,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -716,7 +727,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 with key secondKey, exists in left and right under
 		// mapNode1 with key fisrtKey.
@@ -766,7 +777,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -777,7 +788,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -827,7 +838,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -838,7 +849,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -888,7 +899,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -899,7 +910,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -949,7 +960,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -960,7 +971,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -1010,7 +1021,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1021,7 +1032,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -1070,7 +1081,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1081,7 +1092,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -1130,7 +1141,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1141,7 +1152,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -1190,7 +1201,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1201,7 +1212,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginPseudoConflictMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode2, exists in left and right under mapNode1.
 		List<Diff> differences = comparison.getDifferences();
@@ -1250,7 +1261,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1262,7 +1273,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1311,7 +1322,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1323,7 +1334,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1372,7 +1383,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1384,7 +1395,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1433,7 +1444,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1445,7 +1456,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 doesn't referenced by mapNC1 in the ancestor, referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1494,7 +1505,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1506,7 +1517,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1552,7 +1563,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1564,7 +1575,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1610,7 +1621,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1622,7 +1633,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1668,7 +1679,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1680,7 +1691,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 is referenced by mapNC1 in the ancestor, not referenced in left and right.
 		List<Diff> differences = comparison.getDifferences();
@@ -1726,7 +1737,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertTrue(rightMapNode1Map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMapNode1Map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1738,7 +1749,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -1788,7 +1799,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1800,7 +1811,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -1850,7 +1861,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1862,7 +1873,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -1912,7 +1923,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 
@@ -1924,7 +1935,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginPseudoConflictMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// the node1 exists in the ancestor under mapNode1 in first position, exists in left and right under
 		// mapNode1 in last position.
@@ -1974,7 +1985,7 @@ public class FeatureMapsPseudoConflictsMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMapNode1Map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMapNode1Map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(4, comparison.getDifferences().size());
 	}
 

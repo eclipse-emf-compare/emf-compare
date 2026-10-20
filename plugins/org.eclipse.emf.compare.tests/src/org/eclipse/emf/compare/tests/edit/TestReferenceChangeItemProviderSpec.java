@@ -19,6 +19,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.ecore.EClass;
 import org.junit.Test;
 
@@ -26,10 +27,19 @@ import org.junit.Test;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItemProviderAdapter {
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 */
+	public TestReferenceChangeItemProviderSpec(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testGetChildren_AudioVisualItem() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -49,7 +59,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_Book() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -68,7 +78,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_Borrowable() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -82,7 +92,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_BookCategory() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -111,7 +121,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_Magazine1() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -131,7 +141,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_Magazine2() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -151,7 +161,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_Periodical() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -165,7 +175,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_Person() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
@@ -184,7 +194,7 @@ public class TestReferenceChangeItemProviderSpec extends AbstractTestCompareItem
 
 	@Test
 	public void testGetChildren_TitledItem() throws IOException {
-		Match ePackageMatch = TestMatchItemProviderSpec.getEcoreA1_EPackageMatch();
+		Match ePackageMatch = getEcoreA1PackageMatch();
 
 		Collection<?> ePackage_MatchChildren = adaptAsITreeItemContentProvider(ePackageMatch)
 				.getChildren(ePackageMatch);
