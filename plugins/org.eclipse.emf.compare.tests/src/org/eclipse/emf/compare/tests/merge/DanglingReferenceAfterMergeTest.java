@@ -34,11 +34,12 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
 import org.eclipse.emf.compare.DifferenceState;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -57,10 +58,21 @@ import org.junit.Test;
  * @author lgoubet
  */
 @SuppressWarnings("nls")
-public class DanglingReferenceAfterMergeTest {
+public class DanglingReferenceAfterMergeTest extends AbstractMatcherTest {
+
 	private IndividualDiffInputData input = new IndividualDiffInputData();
 
 	private final BatchMerger batchMerger = new BatchMerger(IMerger.RegistryImpl.createStandaloneInstance());
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public DanglingReferenceAfterMergeTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testDanglingReferencePostMergeLtR() throws IOException {
@@ -69,7 +81,8 @@ public class DanglingReferenceAfterMergeTest {
 		Resource right = input.getDanglingPostMergeRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());
@@ -101,7 +114,8 @@ public class DanglingReferenceAfterMergeTest {
 		Resource right = input.getDanglingPostMergeRight();
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(3, differences.size());

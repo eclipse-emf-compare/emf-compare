@@ -14,6 +14,7 @@ import static com.google.common.collect.Iterators.filter;
 import static com.google.common.collect.Iterators.size;
 import static org.eclipse.emf.compare.utils.EMFComparePredicates.ofKind;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.UnmodifiableIterator;
@@ -24,15 +25,46 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.fullcomparison.data.generics.GenericsMatchInputData;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EOperation;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
-public class GenericsTest {
+/**
+ * Tests matching and differences on generic Ecore types.
+ *
+ * @author <a href="mailto:cedric.brun@obeo.fr">Cedric Brun</a>
+ */
+public class GenericsTest extends AbstractMatcherTest {
+	/** Current diff expansion includes the references inside unmatched generic subtrees. */
+	private static final int EXPECTED_DIFFERENCES = 53;
+
+	/** Containment and exception additions in this fixture. */
+	private static final int EXPECTED_ADDITIONS = 27;
+
+	/** Containment and exception deletions in this fixture. */
+	private static final int EXPECTED_DELETIONS = 6;
+
+	/** Type-reference changes in this fixture. */
+	private static final int EXPECTED_CHANGES = 20;
+
 	private GenericsMatchInputData inputData = new GenericsMatchInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public GenericsTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void test1() throws IOException {
@@ -40,22 +72,36 @@ public class GenericsTest {
 		final Resource right = inputData.getRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 		final List<Diff> differences = comparison.getDifferences();
 
-		assertEquals(38, differences.size());
+		assertEquals(EXPECTED_DIFFERENCES, differences.size());
+
+		EPackage leftPackage = (EPackage)left.getContents().get(0);
+		EPackage rightPackage = (EPackage)right.getContents().get(0);
+		EClass leftClass = (EClass)leftPackage.getEClassifier("Class2"); //$NON-NLS-1$
+		EClass rightClass = (EClass)rightPackage.getEClassifier("Class2"); //$NON-NLS-1$
+		assertSame(rightClass, comparison.getMatch(leftClass).getRight());
+		// get2 keeps its generic return type and argument while adding an upper bound.
+		EOperation leftOperation = leftClass.getEOperations().get(1);
+		EOperation rightOperation = rightClass.getEOperations().get(1);
+		assertSame(rightOperation, comparison.getMatch(leftOperation).getRight());
+		assertSame(rightOperation.getEGenericType(),
+				comparison.getMatch(leftOperation.getEGenericType()).getRight());
+		assertSame(rightOperation.getEGenericType().getETypeArguments().get(0),
+				comparison.getMatch(leftOperation.getEGenericType().getETypeArguments().get(0)).getRight());
 
 		final Predicate<? super Diff> addKind = ofKind(DifferenceKind.ADD);
 		UnmodifiableIterator<Diff> addDiffs = filter(differences.iterator(), addKind);
-		assertEquals(22, size(addDiffs));
+		assertEquals(EXPECTED_ADDITIONS, size(addDiffs));
 
 		final Predicate<? super Diff> deleteKind = ofKind(DifferenceKind.DELETE);
 		UnmodifiableIterator<Diff> deleteDiffs = filter(differences.iterator(), deleteKind);
-		assertEquals(1, size(deleteDiffs));
+		assertEquals(EXPECTED_DELETIONS, size(deleteDiffs));
 
 		final Predicate<? super Diff> changeKind = ofKind(DifferenceKind.CHANGE);
 		UnmodifiableIterator<Diff> changeDiffs = filter(differences.iterator(), changeKind);
-		assertEquals(15, size(changeDiffs));
+		assertEquals(EXPECTED_CHANGES, size(changeDiffs));
 
 	}
 }

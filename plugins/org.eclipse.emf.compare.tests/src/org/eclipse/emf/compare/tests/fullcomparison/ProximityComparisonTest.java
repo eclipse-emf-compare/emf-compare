@@ -27,7 +27,6 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
@@ -36,12 +35,12 @@ import org.eclipse.emf.compare.match.eobject.EcoreWeightProvider;
 import org.eclipse.emf.compare.match.eobject.WeightProvider;
 import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImpl;
 import org.eclipse.emf.compare.match.eobject.internal.WeightProviderDescriptorImpl;
-import org.eclipse.emf.compare.match.impl.MatchEngineFactoryImpl;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
 import org.eclipse.emf.compare.tests.framework.EMFCompareAssert;
-import org.eclipse.emf.compare.tests.framework.EMFCompareTestBase;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.fullcomparison.data.distance.DistanceMatchInputData;
 import org.eclipse.emf.compare.tests.suite.AllTests;
 import org.eclipse.emf.compare.utils.EMFComparePrettyPrinter;
@@ -55,7 +54,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ProximityComparisonTest extends EMFCompareTestBase {
+public class ProximityComparisonTest extends AbstractMatcherTest {
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ProximityComparisonTest(MatcherKind matcher) {
+		super(matcher);
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		AllTests.fillEMFRegistries();
@@ -71,7 +81,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		v2.getEClassifiers().clear();
 
 		final IComparisonScope scope = new DefaultComparisonScope(v1, v2, null);
-		Comparison result = EMFCompare.builder().build().compare(scope);
+		Comparison result = matcher.builder().build().compare(scope);
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have zero diffs", 0, result.getDifferences().size());
 	}
@@ -82,8 +92,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		Resource right = inputData.getCompareRight();
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		assertEquals("We are supposed to have one rename diff", 1, result.getDifferences().size());
 	}
@@ -95,7 +105,7 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		EPackage v2 = EcoreUtil.copy(EcorePackage.eINSTANCE);
 
 		final IComparisonScope scope = new DefaultComparisonScope(v1, v2, null);
-		Comparison result = EMFCompare.builder().build().compare(scope);
+		Comparison result = matcher.builder().build().compare(scope);
 
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have zero diffs", 0, result.getDifferences().size());
@@ -110,8 +120,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 
 		final IComparisonScope scope = new DefaultComparisonScope(v1, v2, null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		assertAllMatched(Lists.newArrayList(v1), result);
 		assertEquals("We are supposed to have a rename", 1, result.getDifferences().size());
@@ -122,8 +132,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		final IComparisonScope scope = new DefaultComparisonScope(inputData.getPackageAddDeleteLeft(),
 				inputData.getPackageAddDeleteRight(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		EMFComparePrettyPrinter.printComparison(result, System.out);
 		final List<Diff> differences = result.getDifferences();
@@ -139,8 +149,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		final IComparisonScope scope = new DefaultComparisonScope(inputData.getPackageAddRemoveNoRenameLeft(),
 				inputData.getPackageAddRemoveNoRenameRight(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		EMFComparePrettyPrinter.printComparison(result, System.out);
 		assertEquals("We are supposed to have zero diffs", 2, result.getDifferences().size());
@@ -151,8 +161,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		final IComparisonScope scope = new DefaultComparisonScope(inputData.getVerySmallLeft(),
 				inputData.getVerySmallRight(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		assertEquals(
 				"The Match took on element which is close enough (in the limits) preventing the next iteration to take it (it was closest)",
@@ -170,9 +180,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		WeightProviderDescriptorImpl descriptor = new WeightProviderDescriptorImpl(weightProvider, 100,
 				Pattern.compile(".*"));
 		weightProviderRegistry.put(weightProvider.getClass().getName(), descriptor);
-		matchEngineFactoryRegistry
-				.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER, weightProviderRegistry));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER, weightProviderRegistry));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		Iterator<AttributeChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
 				AttributeChange.class);
@@ -186,8 +195,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		final IComparisonScope scope = new DefaultComparisonScope(inputData.get390666Left(),
 				inputData.get390666Right(), inputData.get390666Ancestor());
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		Iterator<ResourceAttachmentChange> attrChanges = Iterators.filter(result.getDifferences().iterator(),
 				ResourceAttachmentChange.class);
@@ -203,8 +212,8 @@ public class ProximityComparisonTest extends EMFCompareTestBase {
 		final IComparisonScope scope = new DefaultComparisonScope(inputData.get391798Left(),
 				inputData.get391798Right(), null);
 		IMatchEngine.Factory.Registry matchEngineFactoryRegistry = new MatchEngineFactoryRegistryImpl();
-		matchEngineFactoryRegistry.add(new MatchEngineFactoryImpl(UseIdentifiers.NEVER));
-		Comparison result = EMFCompare.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
+		matchEngineFactoryRegistry.add(matcher.factory(UseIdentifiers.NEVER));
+		Comparison result = matcher.builder().setMatchEngineFactoryRegistry(matchEngineFactoryRegistry)
 				.build().compare(scope);
 		for (Diff dif : result.getDifferences()) {
 			if (dif instanceof ReferenceChange && dif.getKind() == DifferenceKind.MOVE) {

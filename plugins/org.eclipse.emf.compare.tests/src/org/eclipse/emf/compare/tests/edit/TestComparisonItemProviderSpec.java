@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.MatchResource;
 import org.eclipse.emf.compare.provider.ComparisonItemProvider;
 import org.eclipse.emf.compare.provider.spec.ComparisonItemProviderSpec;
 import org.eclipse.emf.compare.tests.edit.data.ecore.a1.EcoreA1InputData;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,8 +31,17 @@ import org.junit.Test;
  * @author <a href="mailto:mikael.barbero@obeo.fr">Mikael Barbero</a>
  */
 public class TestComparisonItemProviderSpec extends AbstractTestCompareItemProviderAdapter {
-
 	private ComparisonItemProvider itemProvider;
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 */
+	public TestComparisonItemProviderSpec(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Override
 	@Before

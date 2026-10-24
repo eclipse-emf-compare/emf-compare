@@ -29,11 +29,12 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.utils.EMFComparePredicates;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Ignore;
@@ -46,9 +47,19 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:laurent.delaigue@obeo.fr">Laurent Delaigue</a>
  */
-public class Bug484557ConflictTest {
+public class Bug484557ConflictTest extends AbstractMatcherTest {
 
 	private Conflict484557InputData input = new Conflict484557InputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public Bug484557ConflictTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testAttributeConflict() throws IOException {
@@ -57,7 +68,7 @@ public class Bug484557ConflictTest {
 		final Resource right = input.getAttributeRightResource();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -83,7 +94,7 @@ public class Bug484557ConflictTest {
 		final Resource right = input.getSingleRefRightResource();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -112,7 +123,7 @@ public class Bug484557ConflictTest {
 		final Resource right = input.getMultiRefRightResource();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();
@@ -152,7 +163,7 @@ public class Bug484557ConflictTest {
 		final Resource right = input.getFeatureMapRightResource();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, ancestor);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		final List<Conflict> conflicts = comparison.getConflicts();

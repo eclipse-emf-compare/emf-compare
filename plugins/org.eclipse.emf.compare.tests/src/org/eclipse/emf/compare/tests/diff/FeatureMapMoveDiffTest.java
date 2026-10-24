@@ -21,12 +21,13 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.compare.tests.diff.data.featuremapmove.FeatureMapMoveDiffInputData;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
 
@@ -36,9 +37,19 @@ import org.junit.Test;
  * @author Stefan Dirix <sdirix@eclipsesource.com>
  */
 @SuppressWarnings("nls")
-public class FeatureMapMoveDiffTest {
+public class FeatureMapMoveDiffTest extends AbstractMatcherTest {
 
 	private FeatureMapMoveDiffInputData input = new FeatureMapMoveDiffInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public FeatureMapMoveDiffTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	/**
 	 * Tests a scenario in which an element is moved from one FeatureMap to another whereby the Nodes
@@ -54,7 +65,7 @@ public class FeatureMapMoveDiffTest {
 		final Resource right = input.getFeatureMapMoveRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(right, left, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// should detect 6 differences when diffengine does not cut off featuremap changes
 		final List<Diff> differences = comparison.getDifferences();

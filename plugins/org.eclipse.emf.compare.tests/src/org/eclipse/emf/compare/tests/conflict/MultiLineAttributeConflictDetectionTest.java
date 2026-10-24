@@ -17,9 +17,10 @@ import java.util.List;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Conflict;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.ThreeWayAttributeMergeScenario;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.Test;
@@ -33,9 +34,19 @@ import org.junit.Test;
  * @author Philip Langer <planger@eclipsesource.com>
  */
 @SuppressWarnings("nls")
-public class MultiLineAttributeConflictDetectionTest {
+public class MultiLineAttributeConflictDetectionTest extends AbstractMatcherTest {
 
 	private static final String NL = "\n";
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public MultiLineAttributeConflictDetectionTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void multiLineAttributeChangeOnOneSide() throws IOException {
@@ -272,7 +283,7 @@ public class MultiLineAttributeConflictDetectionTest {
 		final Resource right = scenario.getRightResource();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		final Comparison comparison = EMFCompare.builder().build().compare(scope);
+		final Comparison comparison = matcher.builder().build().compare(scope);
 		return comparison;
 	}
 

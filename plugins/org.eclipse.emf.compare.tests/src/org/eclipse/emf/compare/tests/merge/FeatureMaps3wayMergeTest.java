@@ -38,13 +38,14 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.FeatureMapChange;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.merge.BatchMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.compare.tests.nodes.NodesPackage;
 import org.eclipse.emf.compare.tests.nodes.util.NodesResourceFactoryImpl;
@@ -64,7 +65,17 @@ import org.junit.Test;
  * ReferenceChange and vice-versa. Each case will be done on the FeatureMapChange and on the ReferenceChange.
  */
 @SuppressWarnings({"nls", "rawtypes", "unchecked" })
-public class FeatureMaps3wayMergeTest {
+public class FeatureMaps3wayMergeTest extends AbstractMatcherTest {
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public FeatureMaps3wayMergeTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@BeforeClass
 	public static void fillEMFRegistries() {
@@ -86,7 +97,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -119,7 +131,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -130,7 +142,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -163,7 +176,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -174,7 +187,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -207,7 +221,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -218,7 +232,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -251,7 +266,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -262,7 +277,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -295,7 +311,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -306,7 +322,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -339,7 +356,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).contains(eSFFirstKey, leftNode2));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -350,7 +367,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -383,7 +401,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -394,7 +412,8 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginAddScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		// Stable IDs keep replacements distinct for these merge/difference assertions.
+		Comparison comparison = matcher.builderWithIdentifiers().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -427,7 +446,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).contains(eSFFirstKey, leftNode2));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builderWithIdentifiers().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -438,7 +457,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -471,7 +490,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -482,7 +501,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -515,7 +534,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).contains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -526,7 +545,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -559,7 +578,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -570,7 +589,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -603,7 +622,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).contains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -614,7 +633,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -647,7 +666,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode2));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -658,7 +677,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -691,7 +710,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -702,7 +721,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -735,7 +754,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode2));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -746,7 +765,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginDeleteScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -779,7 +798,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -790,7 +809,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -824,7 +843,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		// after the diff from the right side and it's equivalent have been correctly merged, we should have
 		// two more equivalent differences on the left side
 		assertEquals(2, comparison.getDifferences().size());
@@ -837,7 +856,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -871,7 +890,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -882,7 +901,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -916,7 +935,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, leftNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -927,7 +946,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -961,7 +980,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, leftNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -972,7 +991,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1006,7 +1025,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		// after correctly merging one change and it's equivalent diff, we should have 2 more differences left
 		assertEquals(2, comparison.getDifferences().size());
 	}
@@ -1018,7 +1037,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1052,7 +1071,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		// after correctly merging one change and it's equivalent diff, we should have 2 more differences left
 		assertEquals(2, comparison.getDifferences().size());
 	}
@@ -1064,7 +1083,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1098,7 +1117,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1109,7 +1128,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1143,7 +1162,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, leftNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1156,7 +1175,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource right = input.getFeatureMapContainmentMoveOutside(resourceSet);
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -1174,7 +1193,7 @@ public class FeatureMaps3wayMergeTest {
 		batchMerger.copyAllLeftToRight(Arrays.asList(referenceChangeDiff), new BasicMonitor());
 
 		scope = new DefaultComparisonScope(left, right, null);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 
 		// left and right should be equal
 		assertEquals(0, comparison.getDifferences().size());
@@ -1189,7 +1208,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource right = input.getFeatureMapContainmentMoveOutside(resourceSet);
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -1207,7 +1226,7 @@ public class FeatureMaps3wayMergeTest {
 		batchMerger.copyAllRightToLeft(Arrays.asList(referenceChangeDiff), new BasicMonitor());
 
 		scope = new DefaultComparisonScope(left, origin, null);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 
 		// two differences should be left between left and origin
 		assertEquals(2, comparison.getDifferences().size());
@@ -1222,7 +1241,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentMoveInsideOutsideOrigin(resourceSet);
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -1249,7 +1268,7 @@ public class FeatureMaps3wayMergeTest {
 
 		// no differences should be left
 		scope = new DefaultComparisonScope(left, right, null);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
 
@@ -1262,7 +1281,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentMoveInsideOutsideOrigin(resourceSet);
 
 		IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertEquals(6, differences.size());
@@ -1289,7 +1308,7 @@ public class FeatureMaps3wayMergeTest {
 
 		// no differences should be left
 		scope = new DefaultComparisonScope(left, right, null);
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
 
@@ -1300,7 +1319,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1336,7 +1355,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1347,7 +1366,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1383,7 +1402,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)map).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1394,7 +1413,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1430,7 +1449,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)map).size());
 		assertEquals(leftNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -1441,7 +1460,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveOrderScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1477,7 +1496,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)map).size());
 		assertEquals(leftNode1, ((BasicFeatureMap)map).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -1488,7 +1507,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1522,7 +1541,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -1533,7 +1552,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1567,7 +1586,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1578,7 +1597,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1612,7 +1631,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFSecondKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1623,7 +1642,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapContainmentOriginMoveKeyChangeScope();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -1657,7 +1676,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(map instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)map).basicContains(eSFFirstKey, rightNode1));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		// after correctly merging one diff and it's equivalent, we should have 2 equivalent differences left
 		assertEquals(2, comparison.getDifferences().size());
 	}
@@ -1670,7 +1689,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -1715,7 +1734,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1727,7 +1746,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -1770,7 +1789,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMap).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -1782,7 +1801,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -1827,7 +1846,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -1839,7 +1858,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -1882,7 +1901,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMap).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -1894,7 +1913,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -1935,7 +1954,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -1947,7 +1966,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -1992,7 +2011,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode2, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2004,7 +2023,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2045,7 +2064,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -2057,7 +2076,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginAddScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2102,7 +2121,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode2, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2114,7 +2133,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2155,7 +2174,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMap).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2167,7 +2186,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2210,7 +2229,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -2222,7 +2241,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2263,7 +2282,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertTrue(((BasicFeatureMap)rightMap).isEmpty());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2275,7 +2294,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2318,7 +2337,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -2330,7 +2349,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2375,7 +2394,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode2, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -2387,7 +2406,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2428,7 +2447,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2440,7 +2459,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2485,7 +2504,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode2, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -2497,7 +2516,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginDeleteScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		List<Diff> differences = comparison.getDifferences();
 		assertEquals(4, differences.size());
@@ -2538,7 +2557,7 @@ public class FeatureMaps3wayMergeTest {
 		assertTrue(rightMap instanceof BasicFeatureMap);
 		assertEquals(1, ((BasicFeatureMap)rightMap).size());
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2550,7 +2569,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -2596,7 +2615,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2608,7 +2627,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -2654,7 +2673,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 1, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(6, comparison.getDifferences().size());
 	}
 
@@ -2666,7 +2685,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -2712,7 +2731,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 
@@ -2724,7 +2743,7 @@ public class FeatureMaps3wayMergeTest {
 		final Resource origin = input.getFeatureMapNonContainmentOriginMoveOrderScope(rs);
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, origin);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		// In this case, left and right diffs represent the same case. There is no need to test both sides.
 		List<Diff> differences = comparison.getDifferences();
@@ -2770,7 +2789,7 @@ public class FeatureMaps3wayMergeTest {
 		assertEquals(2, ((BasicFeatureMap)rightMap).size());
 		assertEquals(rightNode1, ((BasicFeatureMap)rightMap).get(eSFFirstKey, 0, true));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(2, comparison.getDifferences().size());
 	}
 

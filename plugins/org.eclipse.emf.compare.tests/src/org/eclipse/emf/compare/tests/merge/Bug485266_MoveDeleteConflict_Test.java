@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Conflict;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.merge.IMerger;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.data.bug485266.Bug485266InputData;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.junit.runner.RunWith;
@@ -40,6 +41,28 @@ import org.junit.runners.Parameterized.Parameters;
  */
 @RunWith(Parameterized.class)
 public class Bug485266_MoveDeleteConflict_Test extends AbstractMergerTest {
+
+	/**
+	 * Selects one move/delete merge scenario.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 * @param origin
+	 *            the ancestor model
+	 * @param left
+	 *            the left model
+	 * @param right
+	 *            the right model
+	 * @param rightToLeft
+	 *            whether to merge from right to left
+	 * @param expected
+	 *            the expected merged model
+	 */
+	public Bug485266_MoveDeleteConflict_Test(MatcherKind matcher, final Resource origin, final Resource left,
+			final Resource right, final boolean rightToLeft, final Resource expected) {
+		super(matcher, origin, left, right, rightToLeft, expected,
+				IMerger.RegistryImpl.createStandaloneInstance());
+	}
 
 	/**
 	 * Create the list of parameters for the parametrized test. The parameters for each test is an object:
@@ -57,8 +80,25 @@ public class Bug485266_MoveDeleteConflict_Test extends AbstractMergerTest {
 	 * @throws IOException
 	 */
 	@SuppressWarnings({"boxing" })
-	@Parameters
+	@Parameters(name = "{0}-{index}")
 	public static Collection<Object[]> params() throws IOException {
+		Collection<Object[]> result = new ArrayList<>();
+		for (MatcherKind matcher : MatcherKind.values()) {
+			result.addAll(paramsFor(matcher));
+		}
+		return result;
+	}
+
+	/**
+	 * Loads independent fixture instances for one matcher.
+	 *
+	 * @param matcher
+	 *            the selected matcher
+	 * @return the merge scenarios
+	 * @throws IOException
+	 *             if a fixture cannot be loaded
+	 */
+	private static Collection<Object[]> paramsFor(MatcherKind matcher) throws IOException {
 		Bug485266InputData inputData = new Bug485266InputData();
 
 		/**
@@ -81,10 +121,10 @@ public class Bug485266_MoveDeleteConflict_Test extends AbstractMergerTest {
 		 *   - nodeB
 		 * </pre>
 		 */
-		Object[] test1RightToLeft = new Object[] {inputData.getData1AncestorResource(),
+		Object[] test1RightToLeft = new Object[] {matcher, inputData.getData1AncestorResource(),
 				inputData.getData1LeftResource(), inputData.getData1RightResource(), true,
 				inputData.getData1ResultResource() };
-		Object[] test1LeftToRight = new Object[] {inputData.getData1AncestorResource(),
+		Object[] test1LeftToRight = new Object[] {matcher, inputData.getData1AncestorResource(),
 				inputData.getData1RightResource(), inputData.getData1LeftResource(), false,
 				inputData.getData1ResultResource() };
 
@@ -115,53 +155,22 @@ public class Bug485266_MoveDeleteConflict_Test extends AbstractMergerTest {
 		 *   - packageD
 		 * </pre>
 		 */
-		Object[] test2RightToLeft = new Object[] {inputData.getData2AncestorResource(),
+		Object[] test2RightToLeft = new Object[] {matcher, inputData.getData2AncestorResource(),
 				inputData.getData2LeftResource(), inputData.getData2RightResource(), true,
 				inputData.getData2ResultResource() };
-		Object[] test2LeftToRight = new Object[] {inputData.getData2AncestorResource(),
+		Object[] test2LeftToRight = new Object[] {matcher, inputData.getData2AncestorResource(),
 				inputData.getData2RightResource(), inputData.getData2LeftResource(), false,
 				inputData.getData2ResultResource() };
 
 		/**
 		 * More complex models (supertypes, renaming)
 		 */
-		Object[] test3RightToLeft = new Object[] {inputData.getData3AncestorResource(),
+		Object[] test3RightToLeft = new Object[] {matcher, inputData.getData3AncestorResource(),
 				inputData.getData3LeftResource(), inputData.getData3RightResource(), true,
 				inputData.getData3ResultResource() };
-		Object[] test3LeftToRight = new Object[] {inputData.getData3AncestorResource(),
+		Object[] test3LeftToRight = new Object[] {matcher, inputData.getData3AncestorResource(),
 				inputData.getData3RightResource(), inputData.getData3LeftResource(), false,
 				inputData.getData3ResultResource() };
-
-		/**
-		 * <pre>
-		 * The ancestor:
-		 * - root
-		 *   - packageA
-		 *     - packageB
-		 *       - packageC
-		 * 
-		 * The left model:
-		 * - root
-		 * 
-		 * The right model:
-		 * - root
-		 *   - packageC
-		 *     - packageB
-		 *   
-		 * The correct result on the left side after a merge of the move of packageB and packageD from right to left:
-		 * - root
-		 *   - packageC
-		 *     - packageB
-		 * </pre>
-		 * 
-		 * The test is actually commented due to a bug in comparison process.
-		 */
-		Object[] test4RightToLeft = new Object[] {inputData.getData4AncestorResource(),
-				inputData.getData4LeftResource(), inputData.getData4RightResource(), true,
-				inputData.getData4ResultResource() };
-		Object[] test4LeftToRight = new Object[] {inputData.getData4AncestorResource(),
-				inputData.getData4RightResource(), inputData.getData4LeftResource(), false,
-				inputData.getData4ResultResource() };
 
 		/**
 		 * <pre>
@@ -186,21 +195,16 @@ public class Bug485266_MoveDeleteConflict_Test extends AbstractMergerTest {
 		 *     - packageA
 		 * </pre>
 		 */
-		Object[] test5RightToLeft = new Object[] {inputData.getData5AncestorResource(),
+		Object[] test5RightToLeft = new Object[] {matcher, inputData.getData5AncestorResource(),
 				inputData.getData5LeftResource(), inputData.getData5RightResource(), true,
 				inputData.getData5ResultResource() };
-		Object[] test5LeftToRight = new Object[] {inputData.getData5AncestorResource(),
+		Object[] test5LeftToRight = new Object[] {matcher, inputData.getData5AncestorResource(),
 				inputData.getData5RightResource(), inputData.getData5LeftResource(), false,
 				inputData.getData5ResultResource() };
 
 		// test4 is not used for the moment since their is a bug in the comparison process with this models
 		return Arrays.asList(test1RightToLeft, test1LeftToRight, test2RightToLeft, test2LeftToRight,
 				test3RightToLeft, test3LeftToRight, test5RightToLeft, test5LeftToRight);
-	}
-
-	public Bug485266_MoveDeleteConflict_Test(final Resource origin, final Resource left, final Resource right,
-			final boolean rightToLeft, final Resource expected) {
-		super(origin, left, right, rightToLeft, expected, IMerger.RegistryImpl.createStandaloneInstance());
 	}
 
 	@Override

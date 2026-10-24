@@ -26,11 +26,12 @@ import java.util.List;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceSource;
-import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.merge.AbstractMerger;
 import org.eclipse.emf.compare.merge.IMerger;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.compare.scope.IComparisonScope;
+import org.eclipse.emf.compare.tests.framework.AbstractMatcherTest;
+import org.eclipse.emf.compare.tests.framework.MatcherKind;
 import org.eclipse.emf.compare.tests.merge.data.IndividualDiffInputData;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -39,8 +40,19 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.junit.Test;
 
 @SuppressWarnings("nls")
-public class ExtensionMergeTest {
+public class ExtensionMergeTest extends AbstractMatcherTest {
+
 	private IndividualDiffInputData input = new IndividualDiffInputData();
+
+	/**
+	 * Selects the matcher for this execution.
+	 *
+	 * @param matcher
+	 *            the matcher under test
+	 */
+	public ExtensionMergeTest(MatcherKind matcher) {
+		super(matcher);
+	}
 
 	@Test
 	public void testInstantiationMerger() throws IOException {
@@ -48,7 +60,7 @@ public class ExtensionMergeTest {
 		final Resource right = input.getAttributeMonoChangeRight();
 
 		final IComparisonScope scope = new DefaultComparisonScope(left, right, null);
-		Comparison comparison = EMFCompare.builder().build().compare(scope);
+		Comparison comparison = matcher.builder().build().compare(scope);
 
 		final List<Diff> differences = comparison.getDifferences();
 		assertEquals(1, differences.size());
@@ -68,7 +80,7 @@ public class ExtensionMergeTest {
 
 		assertEquals("leftValue", originNode.eGet(feature));
 
-		comparison = EMFCompare.builder().build().compare(scope);
+		comparison = matcher.builder().build().compare(scope);
 		assertEquals(0, comparison.getDifferences().size());
 	}
 
